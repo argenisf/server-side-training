@@ -16,6 +16,15 @@
       <img id="corgi_image" class="corgi" src="http://cdn.akc.org/corgi-4.jpg">
     </div>
 
+    <script>
+      mixpanel.identify("{{ email }}");
+
+      mixpanel.track_links("#link_logout", "Logout",function(){
+        console.log('logged out');
+        mixpanel.reset();
+      });
+    </script>
+
   {% endblock %}
 
 {% block bottom %}
