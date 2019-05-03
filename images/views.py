@@ -35,6 +35,7 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             email = form.cleaned_data.get('email')
+            name = form.cleaned_data.get('first_name')
             
             mp_distinct_id = request.POST['mp_did']
             now = datetime.datetime.utcnow()
@@ -45,6 +46,15 @@ def signup(request):
             });
 
             mp.alias(email, mp_distinct_id)
+
+            mp.people_set(mp_distinct_id, {
+                '$first_name'    : name,
+                'Signup Date'     : now.strftime("%Y-%m-%dT%H:%M:%S"),
+                '$email'         : email,
+                '$username'         : username,
+                'Number of Images' : 0,
+                'Number of Logins' : 0,
+            })
 
             user = authenticate(username=username, password=raw_password)
             log_in(request, user)
@@ -67,6 +77,14 @@ def login(request):
             log_in(request, user)
 
             mp.track(request.user.email, "Login");
+            mp.people_set(request.user.email, {
+                '$first_name'    : request.user.first_name,
+                '$email'         : request.user.email,
+                '$username'         : request.user.username,
+            })
+            mp.people_increment(request.user.email, {
+                'Number of Logins' : 1
+            })
 
             return HttpResponseRedirect('/')
         else:
