@@ -35,4 +35,4 @@
 - Integrate identity management with server-side alias and identify client-side, and alias the username to the client-side distinct_id
 - Pass the distinct_id from the client to the server and vice versa
 
-## Tes
+## Test
